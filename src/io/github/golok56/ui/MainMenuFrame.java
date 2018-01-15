@@ -19,6 +19,7 @@ public class MainMenuFrame extends javax.swing.JFrame {
         
         btnDataObat.addActionListener(ev -> Navigation.showDataObat(this));
         btnPemasok.addActionListener(ev -> Navigation.showDataPemasok(this));
+        btnPenjualan.addActionListener(ev -> Navigation.showDataPenjualan(this));
         
         labelWelcome.setText("Selamat datang " + Session.sAdmin.getUsername());
         
