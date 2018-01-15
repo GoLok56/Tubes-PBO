@@ -20,6 +20,7 @@ public class MainMenuFrame extends javax.swing.JFrame {
         btnDataObat.addActionListener(ev -> Navigation.showDataObat(this));
         btnPemasok.addActionListener(ev -> Navigation.showDataPemasok(this));
         btnPenjualan.addActionListener(ev -> Navigation.showDataPenjualan(this));
+        btnPembelian.addActionListener(ev -> Navigation.showDataPembelian(this));
         
         labelWelcome.setText("Selamat datang " + Session.sAdmin.getUsername());
         
@@ -59,7 +60,7 @@ public class MainMenuFrame extends javax.swing.JFrame {
         btnDataObat = new javax.swing.JButton();
         btnPemasok = new javax.swing.JButton();
         btnPenjualan = new javax.swing.JButton();
-        btnPengadaan = new javax.swing.JButton();
+        btnPembelian = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Apotik");
@@ -98,12 +99,12 @@ public class MainMenuFrame extends javax.swing.JFrame {
         btnPenjualan.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnPenjualan.setOpaque(true);
 
-        btnPengadaan.setBackground(new java.awt.Color(8, 170, 199));
-        btnPengadaan.setForeground(new java.awt.Color(254, 254, 254));
-        btnPengadaan.setText("Pengadaan");
-        btnPengadaan.setBorderPainted(false);
-        btnPengadaan.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btnPengadaan.setOpaque(true);
+        btnPembelian.setBackground(new java.awt.Color(8, 170, 199));
+        btnPembelian.setForeground(new java.awt.Color(254, 254, 254));
+        btnPembelian.setText("Pembelian");
+        btnPembelian.setBorderPainted(false);
+        btnPembelian.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnPembelian.setOpaque(true);
 
         javax.swing.GroupLayout containerLayout = new javax.swing.GroupLayout(container);
         container.setLayout(containerLayout);
@@ -126,7 +127,7 @@ public class MainMenuFrame extends javax.swing.JFrame {
                             .addGroup(containerLayout.createSequentialGroup()
                                 .addComponent(btnPemasok, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(btnPengadaan, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(btnPembelian, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(30, 30, 30))))
         );
         containerLayout.setVerticalGroup(
@@ -142,7 +143,7 @@ public class MainMenuFrame extends javax.swing.JFrame {
                     .addComponent(btnPenjualan))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(containerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnPengadaan)
+                    .addComponent(btnPembelian)
                     .addComponent(btnPemasok))
                 .addContainerGap(30, Short.MAX_VALUE))
         );
@@ -165,7 +166,7 @@ public class MainMenuFrame extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnDataObat;
     private javax.swing.JButton btnPemasok;
-    private javax.swing.JButton btnPengadaan;
+    private javax.swing.JButton btnPembelian;
     private javax.swing.JButton btnPenjualan;
     private javax.swing.JPanel container;
     private javax.swing.JLabel labelWelcome;
