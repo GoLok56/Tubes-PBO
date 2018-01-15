@@ -128,12 +128,10 @@
                       <EmptySpace max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
                           <Component id="tfTelepon" pref="180" max="32767" attributes="0"/>
-                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="tfKota" pref="180" max="32767" attributes="0"/>
-                              <Component id="tfAlamat" max="32767" attributes="0"/>
-                              <Component id="tfNama" max="32767" attributes="0"/>
-                              <Component id="tfKode" max="32767" attributes="0"/>
-                          </Group>
+                          <Component id="tfKota" pref="180" max="32767" attributes="0"/>
+                          <Component id="tfAlamat" max="32767" attributes="0"/>
+                          <Component id="tfNama" max="32767" attributes="0"/>
+                          <Component id="tfKode" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" pref="50" max="-2" attributes="0"/>
                   </Group>
@@ -319,7 +317,7 @@
                     <Column editable="false" title="Kode Pemasok" type="java.lang.String"/>
                     <Column editable="false" title="Nama Pemasok" type="java.lang.String"/>
                     <Column editable="false" title="Alamat" type="java.lang.String"/>
-                    <Column editable="false" title="Kota" type="java.lang.Integer"/>
+                    <Column editable="false" title="Kota" type="java.lang.String"/>
                     <Column editable="false" title="Telepon" type="java.lang.String"/>
                   </Table>
                 </Property>
