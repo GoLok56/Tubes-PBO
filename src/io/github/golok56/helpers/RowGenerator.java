@@ -1,6 +1,7 @@
 package io.github.golok56.helpers;
 
 import io.github.golok56.models.Obat;
+import io.github.golok56.models.Pembelian;
 import io.github.golok56.models.Penjualan;
 
 /**
@@ -25,6 +26,16 @@ public class RowGenerator {
             penjualan.getDate(),
             penjualan.getJumlah(),
             penjualan.getTotal()
+        };
+        return row;
+    }
+    
+    public static Object[] generate(Pembelian pembelian){
+        Object[] row = {
+            pembelian.getNama(),
+            pembelian.getDate(),
+            pembelian.getJumlah(),
+            pembelian.getTotal()
         };
         return row;
     }
