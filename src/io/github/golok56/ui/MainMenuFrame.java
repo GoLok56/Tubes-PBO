@@ -18,7 +18,6 @@ public class MainMenuFrame extends javax.swing.JFrame {
         setVisible(true);
         
         btnDataObat.addActionListener(ev -> Navigation.showDataObat(this));
-        btnPemasok.addActionListener(ev -> Navigation.showDataPemasok(this));
         btnPenjualan.addActionListener(ev -> Navigation.showDataPenjualan(this));
         btnPembelian.addActionListener(ev -> Navigation.showDataPembelian(this));
         
