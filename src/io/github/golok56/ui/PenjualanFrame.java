@@ -1,13 +1,33 @@
 package io.github.golok56.ui;
 
+import io.github.golok56.helpers.Formatter;
+import io.github.golok56.helpers.RowGenerator;
+import io.github.golok56.models.Obat;
+import io.github.golok56.models.Penjualan;
+import io.github.golok56.repositories.ObatRepository;
+import io.github.golok56.repositories.PenjualanRepository;
 import io.github.golok56.services.Navigation;
 import java.awt.Color;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.util.List;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.table.DefaultTableModel;
 
 /**
  * @author satadii11
  */
 public class PenjualanFrame extends BaseFrame {
 
+    private final PenjualanRepository mRepository = new PenjualanRepository();
+    private final ObatRepository mObatRepository = new ObatRepository();
+    
+    private DefaultTableModel mModel;
+    private List<Obat> mObats;
+    private List<Penjualan> mPenjualans;
+    
     /**
      * Creates new form PenjualanFrame
      */
@@ -15,11 +35,108 @@ public class PenjualanFrame extends BaseFrame {
         initComponents();
         setVisible(true);
         
+        try {
+            mObats = mObatRepository.fetch();
+        } catch(SQLException ex){
+            showDialog(ex);
+        }
+        mModel = (DefaultTableModel) table.getModel();
+        
+        inflateCombobox();
+        inflateTable();
+                
+        btnTambah.addActionListener(e -> {
+            Penjualan penjualan = getPenjualanFromForm();
+            if(penjualan == null){
+                return;
+            }
+            
+            try {
+                if(mRepository.insert(penjualan)){
+                    refresh();
+                    showDialog("Berhasil menyimpan obat baru.");
+                } else {
+                    showDialog("Mohon maaf! Terjadi kesalahan!");
+                }
+                clearForm();
+            } catch (SQLException ex) {
+                showDialog(ex);
+            }
+        });
+        
+        btnHapus.addActionListener(e -> {
+            int selectedRow = table.getSelectedRow();
+            if(selectedRow == -1){
+                showDialog("Pilih record yang ingin dihapus!");
+                return;
+            }
+            
+            int id = mPenjualans.get(selectedRow).getId();
+            try {
+                if(mRepository.delete(id)){
+                    mModel.removeRow(selectedRow);
+                    showDialog("Berhasil menghapus data obat");
+                } else {
+                    showDialog("Mohon maaf! Terjadi kesalahan!");
+                }
+            } catch (SQLException ex) {
+                showDialog(ex);
+            }
+        });
+        
         btnKembali.addActionListener(ev -> Navigation.showMainMenu(this));
         
         table.getTableHeader().setBackground(new Color(238,255,107));
     }
-
+    
+    private void inflateCombobox(){
+        String[] namaObat = new String[mObats.size()];
+        for (int i = 0; i < namaObat.length; i++) {
+            namaObat[i] = mObats.get(i).getNama();
+        }
+        
+        DefaultComboBoxModel model = new DefaultComboBoxModel(namaObat);
+        cbObat.setModel(model);
+    }
+    
+    private void inflateTable(){
+        try {
+            mPenjualans = mRepository.fetch();
+        } catch (SQLException ex) { return; }
+        mPenjualans.forEach(penjualan -> mModel.addRow(RowGenerator.generate(penjualan)));
+    }
+    
+    private Penjualan getPenjualanFromForm(){
+        Obat obat = mObats.get(cbObat.getSelectedIndex());
+        
+        String nama = obat.getNama();
+        String date = Formatter.now();
+        String jumlahString = tfJumlah.getText();
+        
+        if(jumlahString.isEmpty()){
+            showDialog("Masukkan jumlah obat yang terjual");
+            return null;
+        }
+        
+        int jumlah = Integer.parseInt(jumlahString);
+        int total = jumlah * obat.getHarga();
+        
+        return new Penjualan(nama, date, jumlah, total);
+    }
+    
+    private void refresh(){
+        int rows = table.getRowCount();
+        for (int i = 0; i < rows; i++) {
+            mModel.removeRow(0);
+        }
+        inflateTable();
+    }
+    
+    private void clearForm(){
+        cbObat.setSelectedIndex(0);
+        tfJumlah.setText("");
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -31,18 +148,15 @@ public class PenjualanFrame extends BaseFrame {
 
         container = new javax.swing.JPanel();
         form = new javax.swing.JPanel();
-        labelIdObat = new javax.swing.JLabel();
-        tfIdObat = new javax.swing.JTextField();
-        labelNamaPembeli = new javax.swing.JLabel();
-        tfNamaPembeli = new javax.swing.JTextField();
-        javax.swing.JLabel labelNamaPembeli1 = new javax.swing.JLabel();
-        tfNamaPembeli1 = new javax.swing.JTextField();
+        javax.swing.JLabel labelNamaObat = new javax.swing.JLabel();
+        javax.swing.JLabel labelJumlah = new javax.swing.JLabel();
+        tfJumlah = new javax.swing.JTextField();
+        cbObat = new javax.swing.JComboBox<>();
         javax.swing.JLabel labelDataPemasok = new javax.swing.JLabel();
         tableContainer = new javax.swing.JScrollPane();
         table = new javax.swing.JTable();
         btnKembali = new javax.swing.JButton();
         btnTambah = new javax.swing.JButton();
-        btnSimpan = new javax.swing.JButton();
         btnHapus = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -52,20 +166,18 @@ public class PenjualanFrame extends BaseFrame {
         form.setBackground(new java.awt.Color(28, 34, 54));
         form.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Form Penjualan", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 0, 12), new java.awt.Color(255, 255, 255))); // NOI18N
 
-        labelIdObat.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
-        labelIdObat.setForeground(new java.awt.Color(254, 254, 254));
-        labelIdObat.setText("Id Obat");
-        labelIdObat.setCursor(new java.awt.Cursor(java.awt.Cursor.MOVE_CURSOR));
+        labelNamaObat.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
+        labelNamaObat.setForeground(new java.awt.Color(254, 254, 254));
+        labelNamaObat.setText("Nama Obat");
+        labelNamaObat.setCursor(new java.awt.Cursor(java.awt.Cursor.MOVE_CURSOR));
 
-        labelNamaPembeli.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
-        labelNamaPembeli.setForeground(new java.awt.Color(254, 254, 254));
-        labelNamaPembeli.setText("Nama Pembeli");
-        labelNamaPembeli.setCursor(new java.awt.Cursor(java.awt.Cursor.MOVE_CURSOR));
+        labelJumlah.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
+        labelJumlah.setForeground(new java.awt.Color(254, 254, 254));
+        labelJumlah.setText("Jumlah");
+        labelJumlah.setCursor(new java.awt.Cursor(java.awt.Cursor.MOVE_CURSOR));
 
-        labelNamaPembeli1.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
-        labelNamaPembeli1.setForeground(new java.awt.Color(254, 254, 254));
-        labelNamaPembeli1.setText("Jumlah");
-        labelNamaPembeli1.setCursor(new java.awt.Cursor(java.awt.Cursor.MOVE_CURSOR));
+        cbObat.setBackground(new java.awt.Color(254, 254, 254));
+        cbObat.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
 
         javax.swing.GroupLayout formLayout = new javax.swing.GroupLayout(form);
         form.setLayout(formLayout);
@@ -74,31 +186,25 @@ public class PenjualanFrame extends BaseFrame {
             .addGroup(formLayout.createSequentialGroup()
                 .addGap(50, 50, 50)
                 .addGroup(formLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(labelIdObat)
-                    .addComponent(labelNamaPembeli)
-                    .addComponent(labelNamaPembeli1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(formLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(tfIdObat, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(tfNamaPembeli, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(tfNamaPembeli1, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(labelNamaObat)
+                    .addComponent(labelJumlah))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 246, Short.MAX_VALUE)
+                .addGroup(formLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(tfJumlah, javax.swing.GroupLayout.DEFAULT_SIZE, 122, Short.MAX_VALUE)
+                    .addComponent(cbObat, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(50, 50, 50))
         );
         formLayout.setVerticalGroup(
             formLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(formLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(formLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(labelIdObat)
-                    .addComponent(tfIdObat, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(formLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(labelNamaObat, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(cbObat, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(formLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tfNamaPembeli, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(labelNamaPembeli))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(formLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tfNamaPembeli1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(labelNamaPembeli1))
+                    .addComponent(tfJumlah, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(labelJumlah))
                 .addContainerGap())
         );
 
@@ -146,14 +252,6 @@ public class PenjualanFrame extends BaseFrame {
         btnTambah.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnTambah.setOpaque(true);
 
-        btnSimpan.setBackground(new java.awt.Color(8, 170, 199));
-        btnSimpan.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
-        btnSimpan.setForeground(new java.awt.Color(254, 254, 254));
-        btnSimpan.setText("Simpan");
-        btnSimpan.setBorderPainted(false);
-        btnSimpan.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btnSimpan.setOpaque(true);
-
         btnHapus.setBackground(new java.awt.Color(8, 170, 199));
         btnHapus.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
         btnHapus.setForeground(new java.awt.Color(254, 254, 254));
@@ -179,8 +277,6 @@ public class PenjualanFrame extends BaseFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(btnTambah, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnSimpan, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btnHapus, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(tableContainer, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 543, Short.MAX_VALUE)
                             .addComponent(form, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -191,7 +287,7 @@ public class PenjualanFrame extends BaseFrame {
             .addGroup(containerLayout.createSequentialGroup()
                 .addGap(30, 30, 30)
                 .addComponent(form, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addComponent(labelDataPemasok)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(tableContainer, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -200,9 +296,8 @@ public class PenjualanFrame extends BaseFrame {
                     .addComponent(btnKembali, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addGroup(containerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(btnHapus)
-                        .addComponent(btnSimpan)
                         .addComponent(btnTambah)))
-                .addContainerGap(30, Short.MAX_VALUE))
+                .addContainerGap(42, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -225,16 +320,12 @@ public class PenjualanFrame extends BaseFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnHapus;
     private javax.swing.JButton btnKembali;
-    private javax.swing.JButton btnSimpan;
     private javax.swing.JButton btnTambah;
+    private javax.swing.JComboBox<String> cbObat;
     private javax.swing.JPanel container;
     private javax.swing.JPanel form;
-    private javax.swing.JLabel labelIdObat;
-    private javax.swing.JLabel labelNamaPembeli;
     private javax.swing.JTable table;
     private javax.swing.JScrollPane tableContainer;
-    private javax.swing.JTextField tfIdObat;
-    private javax.swing.JTextField tfNamaPembeli;
-    private javax.swing.JTextField tfNamaPembeli1;
+    private javax.swing.JTextField tfJumlah;
     // End of variables declaration//GEN-END:variables
 }

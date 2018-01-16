@@ -49,7 +49,7 @@ public class DataObatFrame extends BaseFrame {
             
             try {
                 if(mRepository.update(obat)){
-//                    updateTable(obat);
+                    refresh();
                     showDialog("Berhasil melakukan perubahan terhadap suatu obat");
                 } else {
                     showDialog("Mohon maaf! Terjadi kesalahan!");
@@ -160,6 +160,14 @@ public class DataObatFrame extends BaseFrame {
 
         String kadaluarsa = year + "-" + month + "-" + date;
         return new Obat(kode, nama, satuan, kadaluarsa, harga);
+    }
+    
+    private void refresh(){
+        int rows = table.getRowCount();
+        for (int i = 0; i < rows; i++) {
+            mModel.removeRow(0);
+        }
+        inflateTable();
     }
     
     /**
