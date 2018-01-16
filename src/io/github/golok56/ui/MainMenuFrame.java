@@ -57,7 +57,6 @@ public class MainMenuFrame extends javax.swing.JFrame {
         labelWelcome = new javax.swing.JLabel();
         linkLogout = new javax.swing.JLabel();
         btnDataObat = new javax.swing.JButton();
-        btnPemasok = new javax.swing.JButton();
         btnPenjualan = new javax.swing.JButton();
         btnPembelian = new javax.swing.JButton();
 
@@ -84,13 +83,6 @@ public class MainMenuFrame extends javax.swing.JFrame {
         btnDataObat.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnDataObat.setOpaque(true);
 
-        btnPemasok.setBackground(new java.awt.Color(8, 170, 199));
-        btnPemasok.setForeground(new java.awt.Color(254, 254, 254));
-        btnPemasok.setText("Pemasok");
-        btnPemasok.setBorderPainted(false);
-        btnPemasok.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btnPemasok.setOpaque(true);
-
         btnPenjualan.setBackground(new java.awt.Color(8, 170, 199));
         btnPenjualan.setForeground(new java.awt.Color(254, 254, 254));
         btnPenjualan.setText("Penjualan");
@@ -112,22 +104,15 @@ public class MainMenuFrame extends javax.swing.JFrame {
             .addGroup(containerLayout.createSequentialGroup()
                 .addGap(30, 30, 30)
                 .addGroup(containerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(linkLogout)
+                    .addComponent(labelWelcome)
                     .addGroup(containerLayout.createSequentialGroup()
-                        .addGroup(containerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(linkLogout)
-                            .addComponent(labelWelcome))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(containerLayout.createSequentialGroup()
-                        .addGroup(containerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(containerLayout.createSequentialGroup()
-                                .addComponent(btnDataObat, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 134, Short.MAX_VALUE)
-                                .addComponent(btnPenjualan, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(containerLayout.createSequentialGroup()
-                                .addComponent(btnPemasok, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(btnPembelian, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(30, 30, 30))))
+                        .addComponent(btnDataObat, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnPenjualan, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnPembelian, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(30, Short.MAX_VALUE))
         );
         containerLayout.setVerticalGroup(
             containerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -139,11 +124,8 @@ public class MainMenuFrame extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(containerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnDataObat)
-                    .addComponent(btnPenjualan))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(containerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnPembelian)
-                    .addComponent(btnPemasok))
+                    .addComponent(btnPenjualan)
+                    .addComponent(btnPembelian))
                 .addContainerGap(30, Short.MAX_VALUE))
         );
 
@@ -164,7 +146,6 @@ public class MainMenuFrame extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnDataObat;
-    private javax.swing.JButton btnPemasok;
     private javax.swing.JButton btnPembelian;
     private javax.swing.JButton btnPenjualan;
     private javax.swing.JPanel container;

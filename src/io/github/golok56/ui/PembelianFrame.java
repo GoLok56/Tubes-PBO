@@ -13,6 +13,8 @@ import io.github.golok56.repositories.ObatRepository;
 import io.github.golok56.repositories.PembelianRepository;
 import io.github.golok56.services.Navigation;
 import java.awt.Color;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.sql.SQLException;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
@@ -47,7 +49,16 @@ public class PembelianFrame extends BaseFrame {
         
         inflateCombobox();
         inflateTable();
-                
+              
+        tfJumlah.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent ke) {
+                if(!Character.isDigit(ke.getKeyChar())){
+                    ke.consume();
+                }
+            }
+        });
+        
         btnTambah.addActionListener(e -> {
             Pembelian pembelian = getPembelianFromForm();
             if(pembelian == null){

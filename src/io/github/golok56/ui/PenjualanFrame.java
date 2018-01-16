@@ -44,7 +44,16 @@ public class PenjualanFrame extends BaseFrame {
         
         inflateCombobox();
         inflateTable();
-                
+        
+        tfJumlah.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent ke) {
+                if(!Character.isDigit(ke.getKeyChar())){
+                    ke.consume();
+                }
+            }
+        });
+        
         btnTambah.addActionListener(e -> {
             Penjualan penjualan = getPenjualanFromForm();
             if(penjualan == null){
